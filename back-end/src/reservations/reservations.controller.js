@@ -66,7 +66,7 @@ async function validateStatus(request, response, next) {
 }
 
 async function validateDate(request, response, next) {
-  const reservationDate = new Date(`${request.body.data.reservation_date}`+ " " +`${request.body.data.reservation_time}`);
+  const reservationDate = new Date(`${request.body.data.reservation_date}` + " " + `${request.body.data.reservation_time}`);
 
   if (reservationDate.getDay() === 2) {
     return next({
@@ -74,14 +74,35 @@ async function validateDate(request, response, next) {
       message: `Restaurant closed on Tuesdays`,
     });
   }
-  
- 
+
+
   if (reservationDate < Date.now()) {
     return next({
       status: 400,
       message: ` Only future reservations allowed`,
     });
   }
+  next();
+}
+
+
+async function validateTime(request, response, next) {
+  const reservationTime = new Date(`${request.body.data.reservation_date}` + " " + `${request.body.data.reservation_time}:00.000`);
+
+  if (reservationTime.getHours() === 10 && reservationTime.getMinutes() < 30 || reservationTime.getHours() < 10) {
+    return next({
+      status: 400,
+      message: `Restaurant opens at 10:30am`,
+    });
+  }
+
+  if (reservationTime.getHours() === 21 && reservationTime.getMinutes() > 30 || reservationTime.getHours() > 21) {
+    return next({
+      status: 400,
+      message: `Reservations not available after 9:30pm`,
+    });
+  }
+
   next();
 }
 
@@ -105,6 +126,7 @@ module.exports = {
     validatePeople,
     validateStatus,
     validateDate,
+    validateTime,
     asyncErrorBoundary(create)
   ]
 
