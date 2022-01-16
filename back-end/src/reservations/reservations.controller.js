@@ -74,6 +74,7 @@ async function validateDate(request, response, next) {
       message: `Restaurant closed on Tuesdays`,
     });
   }
+  
  
   if (reservationDate < Date.now()) {
     return next({
