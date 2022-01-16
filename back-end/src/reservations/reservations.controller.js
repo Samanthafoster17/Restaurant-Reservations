@@ -4,7 +4,7 @@ const hasProperties = require("../errors/hasProperties")
 /**
  * List handler for reservation resources
  */
-const hasRequiredProperties = hasProperties("first_name","last_name","mobile_number","people","reservation_date","reservation_time");
+const hasRequiredProperties = hasProperties("first_name", "last_name", "mobile_number", "people", "reservation_date", "reservation_time");
 
 async function validateBody(request, response, next) {
   const required = [
@@ -39,30 +39,56 @@ async function validateBody(request, response, next) {
     });
   }
 
+  next();
 
-if (typeof request.body.data.people !== "number") {
-  return next({ status: 400, message: "'people' must be a number" });
 }
 
-if (request.body.data.people < 1) {
-  return next({ status: 400, message: "'people' must be at least 1" });
+async function validatePeople(request, response, next) {
+  if (typeof request.body.data.people !== "number") {
+    return next({ status: 400, message: "'people' must be a number" });
+  }
+
+  if (request.body.data.people < 1) {
+    return next({ status: 400, message: "'people' must be at least 1" });
+  }
+
+  next();
 }
 
-if (request.body.data.status && request.body.data.status !== "booked") {
-  return next({
-    status: 400,
-    message: `'status' cannot be ${request.body.data.status}`,
-  });
+async function validateStatus(request, response, next) {
+  if (request.body.data.status && request.body.data.status !== "booked") {
+    return next({
+      status: 400,
+      message: `'status' cannot be ${request.body.data.status}`,
+    });
+  }
+  next();
 }
 
-next();
+async function validateDate(request, response, next) {
+  const reservationDate = new Date(`${request.body.data.reservation_date}`+ " " +`${request.body.data.reservation_time}`);
+
+  if (reservationDate.getDay() === 2) {
+    return next({
+      status: 400,
+      message: `Restaurant closed on Tuesdays`,
+    });
+  }
+ 
+  if (reservationDate < Date.now()) {
+    return next({
+      status: 400,
+      message: ` Only future reservations allowed`,
+    });
+  }
+  next();
 }
 
 async function list(req, res) {
   let date = req.query.date;
   data = await service.list(date);
   res.json({ data });
-  console.log( data );
+  console.log(data);
 }
 
 async function create(req, res) {
@@ -71,11 +97,14 @@ async function create(req, res) {
 }
 
 module.exports = {
- list: asyncErrorBoundary(list),
- create: [
-   hasRequiredProperties,
-   validateBody,
-   asyncErrorBoundary(create)
- ]
+  list: asyncErrorBoundary(list),
+  create: [
+    hasRequiredProperties,
+    validateBody,
+    validatePeople,
+    validateStatus,
+    validateDate,
+    asyncErrorBoundary(create)
+  ]
 
 };
