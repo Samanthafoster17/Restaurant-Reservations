@@ -48,5 +48,15 @@
     "people": 2,
     "created_at": "2020-12-10T08:31:32.326Z",
     "updated_at": "2020-12-10T08:31:32.326Z"
+  },
+  {
+    "first_name": "Samantha",
+    "last_name": "Boyd",
+    "mobile_number": "711-717-1993",
+    "reservation_date": "2022-01-15",
+    "reservation_time": "14:00",
+    "people": 2,
+    "created_at": "2022-12-10T08:31:32.326Z",
+    "updated_at": "2022-12-10T08:31:32.326Z"
   }
 ]
