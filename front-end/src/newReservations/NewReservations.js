@@ -17,7 +17,6 @@ function NewReservations({ loadDashboard }) {
   const { reservation_id } = useParams();
 
   const [error, setError] = useState(null);
-  const [reservationsError, setReservationsError] = useState([]);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -99,6 +98,7 @@ function NewReservations({ loadDashboard }) {
             <button type="submit" onClick={handleSubmit} className="btn btn-primary"><span className="oi oi-check"></span> Submit</button>
           </fieldset>
         </form>
+        <ErrorAlert error={error} />
     </main>
   );
 }
