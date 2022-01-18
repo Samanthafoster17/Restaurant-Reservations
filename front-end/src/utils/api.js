@@ -56,6 +56,7 @@ async function fetchJson(url, options, onCancel) {
 /**
  * Retrieves all existing reservation.
  * @returns {Promise<[reservation]>}
+ * @returns {Promise<[tables]} 
  *  a promise that resolves to a possibly empty array of reservation saved in the database.
  */
 
@@ -71,14 +72,55 @@ export async function listReservations(params, signal) {
 
 export async function readReservation(reservation_id, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
-  return await fetchJson(url, { headers, signal })
+  return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
 
 export async function createReservation(reservation, signal) {
-  const url = `${API_BASE_URL}/reservations/`;
-  return await fetchJson(url, {method: 'POST', headers, body: JSON.stringify({ data: reservation}), signal })
-    .then(formatReservationDate)
-    .then(formatReservationTime);
+  const url = `${API_BASE_URL}/reservations`;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: reservation }),
+    signal,
+  };
+  return await fetchJson(url, options, reservation);
 }
+
+export async function listTables(params, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  Object.entries(params).forEach(([key, value]) =>
+    url.searchParams.append(key, value.toString())
+  );
+  return await fetchJson(url, { headers, signal }, [])
+}
+
+export async function readTable(table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}`;
+  return await fetchJson(url, { headers, signal }, [])
+}
+
+export async function createTable(table, signal) {
+  const url = `${API_BASE_URL}/tables`;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal,
+  };
+  return await fetchJson(url, options, table);
+}
+
+export async function seatReservation(table_id, reservation_id) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({ data: { reservation_id } }),
+    headers,
+  };
+  return await fetchJson(url, options);
+}
+
+
+

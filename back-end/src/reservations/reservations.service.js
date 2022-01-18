@@ -9,8 +9,9 @@ function list(reservation_date) {
 
 function read(reservation_id) {
     return knex("reservations")
+    .select("*")
     .where({ reservation_id })
-    .first();
+    .then((reservation) => reservation[0]);
 }
 
 function create(newReservation){
