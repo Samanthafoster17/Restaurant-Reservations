@@ -66,7 +66,7 @@ async function validateStatus(request, response, next) {
 }
 
 async function validateDate(request, response, next) {
-  const reservationDate = new Date(`${request.body.data.reservation_date}` + " " + `${request.body.data.reservation_time}`);
+  const reservationDate = new Date(`${request.body.data.reservation_date} ${request.body.data.reservation_time}`);
 
   if (reservationDate.getDay() === 2) {
     return next({
@@ -87,7 +87,7 @@ async function validateDate(request, response, next) {
 
 
 async function validateTime(request, response, next) {
-  const reservationTime = new Date(`${request.body.data.reservation_date}` + " " + `${request.body.data.reservation_time}:00.000`);
+  const reservationTime = new Date(`${request.body.data.reservation_date} ${request.body.data.reservation_time}`);
 
   if (reservationTime.getHours() === 10 && reservationTime.getMinutes() < 30 || reservationTime.getHours() < 10) {
     return next({
@@ -105,6 +105,22 @@ async function validateTime(request, response, next) {
 
   next();
 }
+
+async function reservationExists(req, res, next) {
+  const { reservation_id } = req.params;
+
+  const reservation = await service.read(reservation_id);
+  if  (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  return next({ status: 404, message: `${reservation_id} does not match any reservations.` });
+}
+
+
+async function read(req, res) {
+res.json({ data: res.locals.reservation })
+}  
 
 async function list(req, res) {
   let date = req.query.date;
@@ -128,6 +144,10 @@ module.exports = {
     validateDate,
     validateTime,
     asyncErrorBoundary(create)
+  ],
+  read: [
+   reservationExists,
+    read
   ]
 
 };
