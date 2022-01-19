@@ -16,7 +16,7 @@ export default function TablesList({ table, loadDashboard }) {
         console.log("ABC")
       await clearSeat(table.table_id)
       await loadDashboard()
-      console.log("CLICK")
+      console.log("CLICK ")
     }
   }
 
