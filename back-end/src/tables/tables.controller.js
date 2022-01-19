@@ -110,7 +110,7 @@ async function checkCapacity(req, res, next) {
 
 async function checkIfOccupied(req, res, next) {
   const { reservation_id } = res.locals.table;
-  if(reservation_id) {
+  if(!reservation_id) {
     return next({ status: 400, message: `table not occupied`})
   }
  next()
@@ -193,10 +193,8 @@ module.exports = {
   ],
 
   delete: [
-    // hasResId,
     asyncErrorBoundary(tableExists),
     checkIfOccupied,
-    // asyncErrorBoundary(reservationExists),
     destroy
   ]
 
