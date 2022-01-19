@@ -52,7 +52,7 @@ function Dashboard({ date }) {
     return tables.map((table) => (
       <TablesList
         table={table}
-        // loadDashboard={loadDashboard}
+        loadDashboard={loadDashboard}
         />
     ))
   }

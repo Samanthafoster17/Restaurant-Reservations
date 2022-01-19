@@ -1,6 +1,5 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-// import FinishBtn from './FinishBtn';
 import { clearSeat, listTables } from "../utils/api";
 
 export default function TablesList({ table, loadDashboard }) {
@@ -17,8 +16,7 @@ export default function TablesList({ table, loadDashboard }) {
         console.log("ABC")
       await clearSeat(table.table_id)
       await loadDashboard()
-      console.log("CLICK")
-    //   history.push("/");
+      console.log("CLICK ")
     }
   }
 
