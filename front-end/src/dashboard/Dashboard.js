@@ -51,7 +51,9 @@ function Dashboard({ date }) {
   const tablesList = () => {
     return tables.map((table) => (
       <TablesList
-        table={table} />
+        table={table}
+        // loadDashboard={loadDashboard}
+        />
     ))
   }
 

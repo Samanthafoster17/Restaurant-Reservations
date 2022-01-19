@@ -118,6 +118,17 @@ async function reservationExists(req, res, next) {
 }
 
 
+async function status(req, res, next){
+  const { reservation_id } = req.params;
+
+  const reservation = await service.read(reservation_id);
+  if  (reservation.status === 'unknown') {
+    return next({ status: 400, message: `${reservation_id} ` });
+  }
+  next();
+
+}
+
 async function read(req, res) {
 res.json({ data: res.locals.reservation })
 }  
@@ -126,7 +137,6 @@ async function list(req, res) {
   let date = req.query.date;
   data = await service.list(date);
   res.json({ data });
-  console.log(data);
 }
 
 async function create(req, res) {
@@ -148,6 +158,9 @@ module.exports = {
   read: [
    reservationExists,
     read
-  ]
+  ],
+  update: [
+    status,
+  ] 
 
 };

@@ -9,6 +9,7 @@ export default function Form({ initialState = {
     reservation_date: "",
     reservation_time: "",
     people: "",
+    status: "booked"
 }, handleSubmit
 }) {
 
