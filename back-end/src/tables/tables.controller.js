@@ -108,6 +108,26 @@ async function checkCapacity(req, res, next) {
   next()
 }
 
+async function checkIfOccupied(req, res, next) {
+  const { status } = res.locals.table;
+  if(status !== 'occupied') {
+    return next({ status: 400, message: `table not occupied`})
+  }
+ next()
+}
+
+
+async function resIsSeated(req, res, next) {
+  const { reservation_id } = req.body.data;
+
+  const reservation = await readRes(reservation_id);
+  if (reservation.status === 'seated') {
+    return next({ status: 400, message: `${reservation_id} already seated.` });
+    
+  }
+  next();
+}
+
 
 async function read(req, res) {
   res.json({ data: res.locals.table })
@@ -137,6 +157,16 @@ async function update(req, res) {
 }
 
 
+async function destroy(req, res) {
+ const { table_id } = res.locals.table;
+ const { reservation_id } = res.locals.table;
+
+  await service.delete({table_id, reservation_id});
+  const data = await service.list();
+  res.json({ data })
+}
+
+
 
 module.exports = {
   list: list,
@@ -154,13 +184,20 @@ module.exports = {
 
   update: [
     hasResId,
-    // hasRequiredProperties,
-    // validateBody,
     asyncErrorBoundary(tableExists),
     asyncErrorBoundary(reservationExists),
     checkAvailability,
+    resIsSeated,
     checkCapacity,
     asyncErrorBoundary(update)
+  ],
+
+  delete: [
+    // hasResId,
+    asyncErrorBoundary(tableExists),
+    checkIfOccupied,
+    // asyncErrorBoundary(reservationExists),
+    destroy
   ]
 
 

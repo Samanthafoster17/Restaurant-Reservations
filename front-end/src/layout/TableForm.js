@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 export default function Form({ initialState = {
     table_name: "",
     capacity: "",
-    // status: "Free"
+    status: "free"
 }, handleSubmit
 }) {
 
