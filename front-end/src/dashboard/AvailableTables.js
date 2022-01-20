@@ -15,13 +15,11 @@ export default function AvailableTables({ tables = [], reservation_id }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(tableId)
         seatReservation(tableId, reservation_id)
             .then((response) => {
                 const newTables = tables.map((table) => {
                     return table.table_id === response.table_id ? response : table
                 })
-                console.log(newTables)
                 setSeatedTables(newTables)
                 history.push('/dashboard')
             })
