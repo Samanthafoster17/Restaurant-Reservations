@@ -140,9 +140,15 @@ async function read(req, res) {
 }
 
 async function list(req, res) {
-  let date = req.query.date;
-  data = await service.list(date);
-  res.json({ data });
+  const { date, mobile_number} = req.query;
+  if(date) {
+    data = await service.list(date);
+    res.json({ data });
+  }
+  if(mobile_number) {
+    data = await service.search(mobile_number);
+    res.json({ data })
+  }
 }
 
 async function create(req, res) {
