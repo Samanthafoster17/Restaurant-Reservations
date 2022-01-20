@@ -1,10 +1,18 @@
-const service = require("./reservations.service")
-const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
-const hasProperties = require("../errors/hasProperties")
+const service = require("./reservations.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const hasProperties = require("../errors/hasProperties");
+
 /**
  * List handler for reservation resources
  */
-const hasRequiredProperties = hasProperties("first_name", "last_name", "mobile_number", "people", "reservation_date", "reservation_time");
+const hasRequiredProperties = hasProperties(
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "people",
+  "reservation_date",
+  "reservation_time"
+);
 
 async function validateBody(request, response, next) {
   const required = [
@@ -40,7 +48,6 @@ async function validateBody(request, response, next) {
   }
 
   next();
-
 }
 
 async function validatePeople(request, response, next) {
@@ -66,7 +73,9 @@ async function validateStatus(request, response, next) {
 }
 
 async function validateDate(request, response, next) {
-  const reservationDate = new Date(`${request.body.data.reservation_date} ${request.body.data.reservation_time}`);
+  const reservationDate = new Date(
+    `${request.body.data.reservation_date} ${request.body.data.reservation_time}`
+  );
 
   if (reservationDate.getDay() === 2) {
     return next({
@@ -74,7 +83,6 @@ async function validateDate(request, response, next) {
       message: `Restaurant closed on Tuesdays`,
     });
   }
-
 
   if (reservationDate < Date.now()) {
     return next({
@@ -85,18 +93,25 @@ async function validateDate(request, response, next) {
   next();
 }
 
-
 async function validateTime(request, response, next) {
-  const reservationTime = new Date(`${request.body.data.reservation_date} ${request.body.data.reservation_time}`);
+  const reservationTime = new Date(
+    `${request.body.data.reservation_date} ${request.body.data.reservation_time}`
+  );
 
-  if (reservationTime.getHours() === 10 && reservationTime.getMinutes() < 30 || reservationTime.getHours() < 10) {
+  if (
+    (reservationTime.getHours() === 10 && reservationTime.getMinutes() < 30) ||
+    reservationTime.getHours() < 10
+  ) {
     return next({
       status: 400,
       message: `Restaurant opens at 10:30am`,
     });
   }
 
-  if (reservationTime.getHours() === 21 && reservationTime.getMinutes() > 30 || reservationTime.getHours() > 21) {
+  if (
+    (reservationTime.getHours() === 21 && reservationTime.getMinutes() > 30) ||
+    reservationTime.getHours() > 21
+  ) {
     return next({
       status: 400,
       message: `Reservations not available after 9:30pm`,
@@ -110,28 +125,19 @@ async function reservationExists(req, res, next) {
   const { reservation_id } = req.params;
 
   const reservation = await service.read(reservation_id);
-  if  (reservation) {
+  if (reservation) {
     res.locals.reservation = reservation;
     return next();
   }
-  return next({ status: 404, message: `${reservation_id} does not match any reservations.` });
-}
-
-
-async function status(req, res, next){
-  const { reservation_id } = req.params;
-
-  const reservation = await service.read(reservation_id);
-  if  (reservation.status === 'unknown') {
-    return next({ status: 400, message: `${reservation_id} ` });
-  }
-  next();
-
+  return next({
+    status: 404,
+    message: `${reservation_id} does not match any reservations.`,
+  });
 }
 
 async function read(req, res) {
-res.json({ data: res.locals.reservation })
-}  
+  res.json({ data: res.locals.reservation });
+}
 
 async function list(req, res) {
   let date = req.query.date;
@@ -144,6 +150,41 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function updateStatus(req, res, next) {
+  const { reservation_id } = req.params;
+  const updRes = {
+    ...req.body.data,
+    reservation_id,
+  };
+  const updStat = await service.updateStatus(updRes);
+  res.json({ data: updStat[0] });
+}
+
+async function statusUnkown(req, res, next) {
+  const status = req.body.data.status;
+
+  if(status === 'unknown') {
+    return next({
+      status: 400,
+      message: ` status is unknown.`,
+    });
+  }
+  next()
+}
+
+async function statusFinished(req, res, next) {
+  const status = res.locals.reservation.status;
+
+  if(status === 'finished') {
+    return next({
+      status: 400,
+      message: ` status is finished.`,
+    });
+  }
+  next()
+}
+
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -153,14 +194,13 @@ module.exports = {
     validateStatus,
     validateDate,
     validateTime,
-    asyncErrorBoundary(create)
+    asyncErrorBoundary(create),
   ],
-  read: [
-   reservationExists,
-    read
-  ],
+  read: [reservationExists, read],
   update: [
-    status,
-  ] 
-
+    asyncErrorBoundary(reservationExists),
+    statusFinished, 
+    statusUnkown,
+   asyncErrorBoundary(updateStatus),
+  ],
 };

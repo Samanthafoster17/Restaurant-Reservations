@@ -14,6 +14,12 @@ function read(table_id) {
     .then((table) => table[0]);
 }
 
+function tableByRes(reservation_id) {
+  return knex("tables")
+  .where({ reservation_id })
+  .whereExists(knex.select("*").from("tables").where({ reservation_id }))
+  .then((result) => result[0])
+}
 
 function create(table) {
  return knex("tables")
@@ -30,7 +36,7 @@ function update({ table_id, reservation_id }) {
         .then(() => {
           return knex('tables')
             .where({ table_id: table_id })
-            .update({ reservation_id: reservation_id })
+            .update({ reservation_id: reservation_id})
             .returning('*');
         })
         .then(trx.commit)
@@ -62,4 +68,5 @@ module.exports = {
     create,
     update,
     delete: destroy,
+    tableByRes,
 }

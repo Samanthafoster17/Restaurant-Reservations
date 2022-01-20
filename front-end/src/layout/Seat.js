@@ -9,13 +9,13 @@ export default function Seat() {
 
     const { reservation_id } = useParams();
     const [reservation, setReservation] = useState({});
-    const [tables, setTables] = useState();
+    const [tables, setTables] = useState([]);
 
     useEffect(() => {
         async function seatTables() {
             readReservation(reservation_id)
                 .then(setReservation);
-            listTables("")
+            listTables({})
                 .then(setTables);
         }
         seatTables()
