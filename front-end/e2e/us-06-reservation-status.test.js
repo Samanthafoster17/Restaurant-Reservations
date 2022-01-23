@@ -69,13 +69,13 @@ describe("US-06 - Reservation status - E2E", () => {
 
       expect(containsBooked).toBe(true);
     });
- console.log(72, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
     test("Seating the reservation changes status to 'seated' and hides Seat button", async () => {
       await page.screenshot({
         path: ".screenshots/us-06-seated-before.png",
         fullPage: true,
       });
-      console.log(78, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+   
       await seatReservation(reservation.reservation_id, table.table_id);
 
       await page.reload({ waitUntil: "networkidle0" });
@@ -84,13 +84,13 @@ describe("US-06 - Reservation status - E2E", () => {
         path: ".screenshots/us-06-seated-after.png",
         fullPage: true,
       });
-      console.log(87, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    
       const containsSeated = await containsText(
         page,
         `[data-reservation-id-status="${reservation.reservation_id}"]`,
         "seated"
       );
-      console.log(93, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+ 
       expect(containsSeated).toBe(true);
       expect(
         await page.$(
@@ -98,7 +98,7 @@ describe("US-06 - Reservation status - E2E", () => {
         )
       ).toBeNull();
     });
-    console.log(101, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  
     test("Finishing the table removes the reservation from the list", async () => {
       await seatReservation(reservation.reservation_id, table.table_id);
 
@@ -108,31 +108,31 @@ describe("US-06 - Reservation status - E2E", () => {
         path: ".screenshots/us-06-finish-before.png",
         fullPage: true,
       });
-      console.log(111, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+ 
       const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
       await page.waitForSelector(finishButtonSelector);
 
       page.on("dialog", async (dialog) => {
         await dialog.accept();
       });
-      console.log(118, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+ 
       await page.click(finishButtonSelector);
 
       await page.waitForResponse((response) => {
         return response.url().endsWith(`/tables`);
       });
-      console.log(124, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    
       await page.screenshot({
         path: ".screenshots/us-06-finish-after.png",
         fullPage: true,
       });
-      console.log(129, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+   
       expect(
         await page.$(
           `[data-reservation-id-status="${reservation.reservation_id}"]`
         )
       ).toBeNull();
-      console.log(135, "HELLLOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
     });
   });
 });

@@ -1,56 +1,37 @@
 import React, { useState } from "react";
 import { listReservations } from "../utils/api";
 import { useHistory } from "react-router";
+import ErrorAlert from "../layout/ErrorAlert";
+import ReservationsList from "./ReservationsList";
+import ReservationTable from "./ReservationTable";
 
 export default function Search() {
   const history = useHistory();
   const [mobile_number, setMobile_number] = useState("");
   const [reservations, setReservations] = useState([]);
+  const [error, setError] = useState(null);
+
+  const submitHandler = (e) => {
+    const abortController = new AbortController();
+    setError(null);
+    e.preventDefault();
+    listReservations({ mobile_number }, abortController.signal)
+      .then(setReservations)
+      .catch(setError);
+    history.push("/search");
+    return () => abortController.abort();
+  };
 
   const searchResults = () => {
     return reservations.map((reservation) => (
-      <div className="table-responsive">
-        <table className="table no-wrap">
-          <thead>
-            <tr>
-              <th className="border-top-0">#</th>
-              <th className="border-top-0">NAME</th>
-              <th className="border-top-0">PHONE</th>
-              <th className="border-top-0">DATE</th>
-              <th className="border-top-0">TIME</th>
-              <th className="border-top-0">PEOPLE</th>
-              <th className="border-top-0">STATUS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{reservation.reservation_id}</td>
-              <td>
-                {reservation.last_name}, {reservation.first_name}
-              </td>
-              <td>{reservation.mobile_number}</td>
-              <td>{reservation.reservation_date}</td>
-              <td>{reservation.reservation_time}</td>
-              <td>{reservation.people}</td>
-              <td data-reservation-id-status={`${reservation.reservation_id}`}>
-                {reservation.status}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <ReservationsList reservation={reservation} />
     ));
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    listReservations({ mobile_number }).then(setReservations);
-    history.push("/search");
   };
 
   return (
     <main>
       <h1>Search reservations</h1>
+      <ErrorAlert error={error} />
       <form onSubmit={submitHandler}>
         <fieldset>
           <div className="row">
@@ -80,7 +61,14 @@ export default function Search() {
           </div>
         </fieldset>
       </form>
-      {searchResults()}
+      {reservations.length ? (
+        <ReservationTable
+          reservationList={searchResults}
+          reservations={reservations}
+        />
+      ) : (
+        "No reservations found"
+      )}
     </main>
   );
 }

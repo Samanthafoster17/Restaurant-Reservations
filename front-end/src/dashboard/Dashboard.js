@@ -3,10 +3,10 @@ import { listReservations, listTables } from "../utils/api";
 import { today, previous, next } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
 import ErrorAlert from "../layout/ErrorAlert";
-import ReservationTable from "../layout/ReservationTable";
-import TablesTable from "../layout/TablesTable";
-import ReservationsList from "../dashboard/ReservationsList";
-import TablesList from "../dashboard/TableList";
+import ReservationTable from "../reservations/ReservationTable";
+import TablesTable from "../tables/TablesTable";
+import ReservationsList from "../reservations/ReservationsList";
+import TablesList from "../tables/TableList";
 
 
 
@@ -38,11 +38,14 @@ function Dashboard({ date }) {
       .catch(setReservationsError);
     return () => abortController.abort();
   }
-
+  
+   
 
   const reservationList = () => {
-    return reservations.map((reservation) => (
+    const filteredRes = reservations.filter(reservation => reservation.status !== 'finished');
+    return filteredRes.map((reservation) => (
       <ReservationsList
+      loadDashboard={loadDashboard}
         reservation={reservation} />
     ))
   }
