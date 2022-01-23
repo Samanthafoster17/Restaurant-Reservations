@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createTable  } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import Form from "../layout/TableForm";
+import Form from "./TableForm";
 
 /**
  * Defines the dashboard page.
@@ -16,12 +16,14 @@ function NewTable() {
 
 
   function handleSubmit(formData) {
-    createTable(formData)
+    const abortController = new AbortController();
+    setError(null);
+    createTable(formData, abortController.signal)
       .then(() => {
         history.push(`/dashboard`)
       })
       .catch(setError)
-    return;
+      return () => abortController.abort();
   }
 
 

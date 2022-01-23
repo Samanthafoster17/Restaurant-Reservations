@@ -1,13 +1,12 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-import { clearSeat, listTables } from "../utils/api";
+import { clearSeat } from "../utils/api";
 
 export default function TablesList({ table, loadDashboard }) {
   async function finishAlert(e) {
     e.preventDefault();
     if (window.confirm("Is this table ready to seat new guests?")) {
-      await clearSeat(table.table_id)
-      await loadDashboard()
+      await clearSeat(table.table_id);
+      await loadDashboard();
     }
   }
 

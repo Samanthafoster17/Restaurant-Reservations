@@ -140,14 +140,18 @@ async function read(req, res) {
 }
 
 async function list(req, res) {
-  const { date, mobile_number} = req.query;
-  if(date) {
-    data = await service.list(date);
+  const { date, currentDate, mobile_number } = req.query;
+  if (date) {
+    data = await service.listByDate(date);
     res.json({ data });
-  }
-  if(mobile_number) {
+  } else if (currentDate) {
+    data = await service.listByDate(currentDate);
+    res.json({ data });
+  } else if (mobile_number) {
     data = await service.search(mobile_number);
-    res.json({ data })
+    res.json({ data });
+  } else {
+    res.json({ data: await service.list() });
   }
 }
 
@@ -166,30 +170,46 @@ async function updateStatus(req, res, next) {
   res.json({ data: updStat[0] });
 }
 
+async function update(req, res, next) {
+  const { reservation_id } = req.params;
+  const updRes = {
+    ...req.body.data,
+    reservation_id,
+  };
+  const updStat = await service.update(updRes);
+  res.json({ data: updStat[0] });
+}
+
 async function statusUnkown(req, res, next) {
   const status = req.body.data.status;
 
-  if(status === 'unknown') {
+  if (status === "unknown") {
     return next({
       status: 400,
       message: ` status is unknown.`,
     });
   }
-  next()
+  next();
 }
 
 async function statusFinished(req, res, next) {
   const status = res.locals.reservation.status;
 
-  if(status === 'finished') {
+  if (status === "finished") {
     return next({
       status: 400,
       message: ` status is finished.`,
     });
   }
-  next()
+  next();
 }
 
+// async function statusCancelled(req, res, next) {
+//   const status = req.body.data;
+//   if(status && status === 'cancelled'){
+//     res.status(200)
+//   }
+// }
 
 module.exports = {
   list: asyncErrorBoundary(list),
@@ -202,11 +222,21 @@ module.exports = {
     validateTime,
     asyncErrorBoundary(create),
   ],
-  read: [reservationExists, read],
+  read: [asyncErrorBoundary(reservationExists), read],
   update: [
+    hasRequiredProperties,
+    validateBody,
+    validatePeople,
+    validateStatus,
+    validateDate,
+    validateTime,
     asyncErrorBoundary(reservationExists),
-    statusFinished, 
+    asyncErrorBoundary(update),
+  ],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    statusFinished,
     statusUnkown,
-   asyncErrorBoundary(updateStatus),
+    asyncErrorBoundary(updateStatus),
   ],
 };

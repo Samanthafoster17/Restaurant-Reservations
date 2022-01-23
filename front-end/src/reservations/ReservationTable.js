@@ -1,8 +1,6 @@
 import React from "react";
 
-
 export default function ReservationTable({ reservationList, reservations }) {
-
   return (
     <div className="table-responsive">
       <table className="table no-wrap">
@@ -17,16 +15,13 @@ export default function ReservationTable({ reservationList, reservations }) {
             <th className="border-top-0">STATUS</th>
           </tr>
         </thead>
-           
-              {reservations ? reservationList() : 
-                'No Reservations for Today'
-              }
 
+        {reservations.length ? (
+          reservationList()
+        ) : (
+          <> No Reservations for Today</>
+        )}
       </table>
     </div>
-
-  )
+  );
 }
-
-
-
