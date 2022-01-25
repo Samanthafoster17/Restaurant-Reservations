@@ -2,8 +2,8 @@ import React from "react";
 
 export default function TablesTable({ tablesList }) {
   return (
-    <div id="tables" className="table-sm">
-      <table className="table-table">
+    <div id="tables">
+      <table className="table table-sm">
         <thead>
           <tr>
             <th scope="col">#</th>
