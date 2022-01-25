@@ -3,7 +3,7 @@ import { seatReservation } from "../utils/api";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
-export default function AvailableTables({ tables = [], reservation_id }) {
+export default function SeatTable({ tables = [], reservation_id }) {
   const history = useHistory();
   const [tableId, setTableId] = useState("");
   const [seatedTables, setSeatedTables] = useState([]);
@@ -25,8 +25,10 @@ export default function AvailableTables({ tables = [], reservation_id }) {
     return () => abortController.abort();
   }
 
+  // only displaying tables that are not occupied to avoid error
   const tablesOptions = () => {
-    return tables.map((table) => (
+    const availableTables = tables.filter((table) => !table.reservation_id);
+    return availableTables.map((table) => (
       <option
         key={table.table_id}
         value={JSON.stringify(table.table_id)}

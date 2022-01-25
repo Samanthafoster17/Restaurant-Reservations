@@ -24,12 +24,15 @@ export default function Search() {
 
   const searchResults = () => {
     return reservations.map((reservation) => (
-      <ReservationsList reservation={reservation} />
+      <ReservationsList
+        reservation={reservation}
+        key={reservation.reservation_id}
+      />
     ));
   };
 
   return (
-    <main>
+    <>
       <h1>Search reservations</h1>
       <ErrorAlert error={error} />
       <form onSubmit={submitHandler}>
@@ -67,8 +70,8 @@ export default function Search() {
           reservations={reservations}
         />
       ) : (
-        "No reservations found"
+        <>{"No reservations found"}</>
       )}
-    </main>
+    </>
   );
 }

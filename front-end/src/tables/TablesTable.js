@@ -1,19 +1,20 @@
-import React from "react"
+import React from "react";
 
 export default function TablesTable({ tablesList }) {
-
-    return (
-        <div className="table-responsive">
-            <table className="table no-wrap">
-                <thead>
-                    <tr>
-                        <th className="border-top-0">#</th>
-                        <th className="border-top-0">TABLE NAME</th>
-                        <th className="border-top-0">CAPACITY</th>
-                        <th className="border-top-0">Free?</th>
-                    </tr></thead>
-                {tablesList()}
-            </table>
-        </div>
-    )
+  return (
+    <div id="tables" className="table-sm">
+      <table className="table-table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">TABLE NAME</th>
+            <th scope="col">CAPACITY</th>
+            <th scope="col">FREE?</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>{tablesList()}</tbody>
+      </table>
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { createTable  } from "../utils/api";
+import { createTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import Form from "./TableForm";
 
@@ -14,28 +14,22 @@ function NewTable() {
   const history = useHistory();
   const [error, setError] = useState(null);
 
-
   function handleSubmit(formData) {
     const abortController = new AbortController();
     setError(null);
     createTable(formData, abortController.signal)
       .then(() => {
-        history.push(`/dashboard`)
+        history.push(`/dashboard`);
       })
-      .catch(setError)
-      return () => abortController.abort();
+      .catch(setError);
+    return () => abortController.abort();
   }
-
-
-
 
   return (
     <main>
       <h1>Create Table</h1>
-      <Form
-        handleSubmit={handleSubmit}
-      />
-        <ErrorAlert error={error} />
+      <Form handleSubmit={handleSubmit} />
+      <ErrorAlert error={error} />
     </main>
   );
 }
