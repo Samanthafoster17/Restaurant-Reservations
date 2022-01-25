@@ -8,8 +8,6 @@ import TablesTable from "../tables/TablesTable";
 import ReservationsList from "../reservations/ReservationsList";
 import TablesList from "../tables/TableList";
 
-
-
 /**
  * Defines the dashboard page.
  * @param date
@@ -20,7 +18,6 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
-  
 
   const query = useQuery().get("date");
   if (query) date = query;
@@ -33,63 +30,84 @@ function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
-      listTables(abortController.signal)
+    listTables(abortController.signal)
       .then(setTables)
       .catch(setReservationsError);
     return () => abortController.abort();
   }
-  
-   
 
+  // filtering reservations to only display not finished,
+  // then map through reservations to access each reservation data
   const reservationList = () => {
-    const filteredRes = reservations.filter(reservation => reservation.status !== 'finished');
+    const filteredRes = reservations.filter(
+      (reservation) => reservation.status !== "finished"
+    );
     return filteredRes.map((reservation) => (
       <ReservationsList
-      loadDashboard={loadDashboard}
-        reservation={reservation} />
-    ))
-  }
+        loadDashboard={loadDashboard}
+        reservation={reservation}
+        key={reservation.reservation_id}
+      />
+    ));
+  };
 
-
+  // map through tables to access each table data
   const tablesList = () => {
     return tables.map((table) => (
       <TablesList
         table={table}
         loadDashboard={loadDashboard}
-        />
-    ))
-  }
+        key={table.table_id}
+      />
+    ));
+  };
 
-   let day = today(date);
-   let nextDay = next(date);
-   let prevDay = previous(date);
-  
+  let day = today(date);
+  let nextDay = next(date);
+  let prevDay = previous(date);
 
   return (
     <main>
       <h1>Dashboard</h1>
       <div className="row">
-        <div className="col-md-6 col-lg-6 col-sm-12">
+        <div className="col">
           <div className="d-md-flex mb-3">
             <h4 className="mb-0">Reservations for {date}</h4>
           </div>
-          <div className="btn-group" role="group" aria-label="navigation buttons">
-            <a className="btn btn-secondary" href={`/dashboard?date=${prevDay}`}>
-              <span className="oi oi-chevron-left"></span>&nbsp;Previous</a>
-            <a className="btn btn-secondary" href={`/dashboard?date=${day}`}>Today</a>
-            <a className="btn btn-secondary" href={`/dashboard?date=${nextDay}`}>Next&nbsp;
-              <span className="oi oi-chevron-right"></span></a>
+          <div
+            className="btn-group"
+            role="group"
+            aria-label="navigation buttons"
+          >
+            <a
+              className="btn btn-secondary mb-2 mr-2"
+              href={`/dashboard?date=${prevDay}`}
+            >
+              <span className="oi oi-chevron-left"></span>&nbsp;Previous
+            </a>
+            <a
+              className="btn btn-secondary mb-2 mr-2"
+              href={`/dashboard?date=${day}`}
+            >
+              Today
+            </a>
+            <a
+              className="btn btn-secondary mb-2"
+              href={`/dashboard?date=${nextDay}`}
+            >
+              Next&nbsp;
+              <span className="oi oi-chevron-right"></span>
+            </a>
           </div>
-          <ReservationTable
-            reservationList={reservationList}
-            reservations={reservations}
-          />
+          <div className="">
+            <ReservationTable
+              reservationList={reservationList}
+              reservations={reservations}
+            />
+          </div>
         </div>
-        <div className="col-md-6 col-lg-6 col-sm-12">
-        <TablesTable
-            tablesList={tablesList}
-            tables={tables}
-          />
+        <div className="col">
+          <TablesTable tablesList={tablesList} tables={tables} />
         </div>
         <ErrorAlert error={reservationsError} />
       </div>

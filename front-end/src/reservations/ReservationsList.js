@@ -18,8 +18,8 @@ function ReservationsList({ reservation, loadDashboard }) {
 
   return (
     <tbody>
-      <tr>
-        <td>{reservation_id}</td>
+      <tr key={reservation.reservation_id}>
+        <th scope="row">{reservation.reservation_id}</th>
         <td>
           {reservation.last_name}, {reservation.first_name}
         </td>
@@ -50,7 +50,7 @@ function ReservationsList({ reservation, loadDashboard }) {
         <td>
           <button
             type="button"
-            className="btn btn-secondary mr-2 cancel"
+            className="btn btn-secondary cancel"
             data-reservation-id-cancel={reservation_id}
             onClick={cancelAlert}
           >

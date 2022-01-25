@@ -2,9 +2,8 @@ const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
 
-/**
- * List handler for reservation resources
- */
+//  validation
+
 const hasRequiredProperties = hasProperties(
   "first_name",
   "last_name",
@@ -135,52 +134,7 @@ async function reservationExists(req, res, next) {
   });
 }
 
-async function read(req, res) {
-  res.json({ data: res.locals.reservation });
-}
-
-async function list(req, res) {
-  const { date, currentDate, mobile_number } = req.query;
-  if (date) {
-    data = await service.listByDate(date);
-    res.json({ data });
-  } else if (currentDate) {
-    data = await service.listByDate(currentDate);
-    res.json({ data });
-  } else if (mobile_number) {
-    data = await service.search(mobile_number);
-    res.json({ data });
-  } else {
-    res.json({ data: await service.list() });
-  }
-}
-
-async function create(req, res) {
-  const data = await service.create(req.body.data);
-  res.status(201).json({ data });
-}
-
-async function updateStatus(req, res, next) {
-  const { reservation_id } = req.params;
-  const updRes = {
-    ...req.body.data,
-    reservation_id,
-  };
-  const updStat = await service.updateStatus(updRes);
-  res.json({ data: updStat[0] });
-}
-
-async function update(req, res, next) {
-  const { reservation_id } = req.params;
-  const updRes = {
-    ...req.body.data,
-    reservation_id,
-  };
-  const updStat = await service.update(updRes);
-  res.json({ data: updStat[0] });
-}
-
-async function statusUnkown(req, res, next) {
+async function statusUnknown(req, res, next) {
   const status = req.body.data.status;
 
   if (status === "unknown") {
@@ -204,12 +158,52 @@ async function statusFinished(req, res, next) {
   next();
 }
 
-// async function statusCancelled(req, res, next) {
-//   const status = req.body.data;
-//   if(status && status === 'cancelled'){
-//     res.status(200)
-//   }
-// }
+// CRUD
+
+async function create(req, res) {
+  const data = await service.create(req.body.data);
+  res.status(201).json({ data });
+}
+
+async function read(req, res) {
+  res.json({ data: res.locals.reservation });
+}
+
+async function list(req, res) {
+  const { date, currentDate, mobile_number } = req.query;
+  if (date) {
+    data = await service.listByDate(date);
+    res.json({ data });
+  } else if (currentDate) {
+    data = await service.listByDate(currentDate);
+    res.json({ data });
+  } else if (mobile_number) {
+    data = await service.search(mobile_number);
+    res.json({ data });
+  } else {
+    res.json({ data: await service.list() });
+  }
+}
+
+async function updateStatus(req, res, next) {
+  const { reservation_id } = req.params;
+  const updRes = {
+    ...req.body.data,
+    reservation_id,
+  };
+  const updStat = await service.updateStatus(updRes);
+  res.json({ data: updStat[0] });
+}
+
+async function update(req, res, next) {
+  const { reservation_id } = req.params;
+  const updRes = {
+    ...req.body.data,
+    reservation_id,
+  };
+  const updStat = await service.update(updRes);
+  res.json({ data: updStat[0] });
+}
 
 module.exports = {
   list: asyncErrorBoundary(list),
@@ -236,7 +230,7 @@ module.exports = {
   updateStatus: [
     asyncErrorBoundary(reservationExists),
     statusFinished,
-    statusUnkown,
+    statusUnknown,
     asyncErrorBoundary(updateStatus),
   ],
 };

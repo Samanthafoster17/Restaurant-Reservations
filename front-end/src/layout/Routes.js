@@ -5,7 +5,7 @@ import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import NewTable from "../tables/CreateTables";
-import Seat from "../reservations/Seat";
+import SeatReservation from "../reservations/SeatReservation";
 import Search from "../reservations/Search";
 import Form from "../reservations/ReservationForm";
 
@@ -17,24 +17,13 @@ import Form from "../reservations/ReservationForm";
  * @returns {JSX.Element}
  */
 function Routes() {
-  const [date, setDate] = useState(today());
-
-  const url = useRouteMatch();
-  const query = useQuery();
-
-  function loadDate() {
-    const newDate = query.get("date");
-    if (newDate) {
-      setDate(newDate);
-    }
-  }
-
-  useEffect(loadDate, [url, query]);
-
   return (
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
+      </Route>
+      <Route exact={true} path="/dashboard">
+        <Dashboard date={today()} />
       </Route>
       <Route exact={true} path="/reservations">
         <Redirect to={"/dashboard"} />
@@ -42,14 +31,11 @@ function Routes() {
       <Route exact={true} path="/tables">
         <Redirect to={"/dashboard"} />
       </Route>
-      <Route exact={true} path="/dashboard">
-        <Dashboard date={today()} />
-      </Route>
       <Route exact={true} path="/reservations/new">
         <Form />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/seat">
-        <Seat />
+        <SeatReservation />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/edit">
         <Form />

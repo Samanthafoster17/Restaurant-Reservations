@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import AvailableTables from "../tables/AvailableTables";
+import SeatTable from "../tables/SeatTable";
 import { listTables, readReservation } from "../utils/api";
 
-export default function Seat() {
+export default function SeatReservation() {
   const { reservation_id } = useParams();
   const [reservation, setReservation] = useState({});
   const [tables, setTables] = useState([]);
@@ -33,7 +33,7 @@ export default function Seat() {
           {reservation.reservation_time} for {reservation.people}{" "}
         </h3>
 
-        <AvailableTables tables={tables} reservation_id={reservation_id} />
+        <SeatTable tables={tables} reservation_id={reservation_id} />
       </main>
       <ErrorAlert error={error} />
     </div>
