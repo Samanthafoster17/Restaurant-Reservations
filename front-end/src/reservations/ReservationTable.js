@@ -2,9 +2,9 @@ import React from "react";
 
 export default function ReservationTable({ reservationList, reservations }) {
   return (
-    <div id="reservation" className="table">
+    <div id="reservation">
       {reservations.length ? (
-        <table className="table-table">
+        <table className="table">
           <thead>
             <tr>
               <th scope="col">#</th>

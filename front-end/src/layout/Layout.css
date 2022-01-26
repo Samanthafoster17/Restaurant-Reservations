@@ -46,12 +46,12 @@ th {
 td,
 th {
   padding: 6px;
-  border: 1px solid #ccc;
+  border: 1px dotted #8dc6ff;
   text-align: left;
 }
 
 @media only screen and (max-width: 760px),
-  (min-device-width: 768px) and (max-device-width: 768) {
+  (min-device-width: 768px) and (max-device-width: 900px) {
   /* Force table to not be like tables anymore */
   table,
   thead,
@@ -96,37 +96,32 @@ th {
 	Label the data
 	*/
   #reservation td:nth-of-type(1):before {
-    content: "#:";
-  }
-  #reservation td:nth-of-type(2):before {
     content: "NAME:";
   }
-  #reservation td:nth-of-type(3):before {
+  #reservation td:nth-of-type(2):before {
     content: "PHONE:";
   }
-  #reservation td:nth-of-type(4):before {
+  #reservation td:nth-of-type(3):before {
     content: "DATE:";
   }
-  #reservation td:nth-of-type(5):before {
+  #reservation td:nth-of-type(4):before {
     content: "TIME:";
   }
-  #reservation td:nth-of-type(6):before {
+  #reservation td:nth-of-type(5):before {
     content: "PEOPLE:";
   }
-  #reservation td:nth-of-type(7):before {
+  #reservation td:nth-of-type(6):before {
     content: "STATUS:";
   }
 
+  
   #tables td:nth-of-type(1):before {
-    content: "#:";
-  }
-  #tables td:nth-of-type(2):before {
     content: "TABLE NAME:";
   }
-  #tables td:nth-of-type(3):before {
+  #tables td:nth-of-type(2):before {
     content: "CAPACITY:";
   }
-  #tables td:nth-of-type(4):before {
+  #tables td:nth-of-type(3):before {
     content: "FREE?:";
   }
 }
