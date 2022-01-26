@@ -13,8 +13,6 @@
 
 - [Installation](#installation) 
 
-- [Images](#images)
-
 - [Tests](#tests)
 
 - [Questions](#questions)
@@ -49,20 +47,17 @@ From ./back-end run:
 Run `cp ./front-end/`,  
 Create a .env file in ./front-end/.env you may connect to a backend or connect http://localhost:5000.  
 Run `npm run start` from root directory.  
-
 ## Tests
 `npm test` runs all tests.  
 `npm run test:backend` runs all backend tests.  
 `npm run test:frontend` runs all frontend tests.  
 `npm run test:e2e` runs only the end-to-end tests.  
-
   
 ## Questions 
 Please send any questions to:   Samanthafoster17@gmail.com  
 
 You may view GitHub profile here:   
 -[Github Profile](https://github.com/Samanthafoster17).  
-
 
 ## Images
 
@@ -100,25 +95,6 @@ An example response looks like this:
 HTTP/1.1 200 OK  
 Content-Type: application/json; charset=utf-8  
 
-=======
-## API Documentation
-Restaurant-Reservations API is a JSON RESTful API.  
-
-Endpoints:  
-
-"/reservations"  
-accepts GET and POST requests.   
-
-GET requests returns a list of reservations.  
-
-An example request looks like this:  
- GET http://localhost:5000/reservations  
-
-An example response looks like this:  
-HTTP/1.1 200 OK  
-Content-Type: application/json; charset=utf-8  
-
-```
  {
 "data":[
 {
@@ -132,7 +108,6 @@ Content-Type: application/json; charset=utf-8
 "reservation_time": "18:00:00",
 "created_at": "2022-12-10T08:31:32.326Z",
 "updated_at": "2022-12-10T08:31:32.326Z"
-
 },
 {
 "reservation_id": 2,
@@ -173,6 +148,7 @@ HTTP/1.1
 Content-Type: application/json  
 Accept: application/json  
 Accept-Charset: utf-8  
+
 {"data":
  {"first_name":"Samantha",     
 "last_name":"Foster",   
@@ -185,7 +161,6 @@ Accept-Charset: utf-8
 ```  
 
 With the following fields:
-
 |   Parameter    | Type   | Required | 
 | :------------: | :----: | :------: |  
 |   first_name   | string |  yes     | 
@@ -492,4 +467,3 @@ Content-Type: application/json; charset=utf-8
 |   404           | Provided `table_id`, `reservation_id` has no match, or requested URL is not found.    |
 |   405           | Method not allowed for requested URL | 
 |   500           | Express API error handler.  |                 
-
