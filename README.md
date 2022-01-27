@@ -440,7 +440,7 @@ Accept-Charset: utf-8
  }
 }
 ````
-An example request looks like this:
+An example response looks like this:
 
 ```
 HTTP/1.1 200 OK
@@ -459,6 +459,45 @@ Content-Type: application/json; charset=utf-8
  ]
 }
 ```  
+
+`DELETE` requests removes the `reservation_id` that has been assigned to the table by the specified `table_id`,
+updating the corresponding reservation `"status": "finished"` and the table becomes available.
+
+An example request looks like this:  
+
+`DELETE http://localhost:5000/tables/2/seat`  
+
+```
+HTTP/1.1 204 No Content
+Content-Type: application/json  
+Accept: application/json  
+Accept-Charset: utf-8   
+
+{
+"data":{
+"table_id": "2"
+ }
+}
+```  
+
+An example response looks like this:  
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8  
+
+{
+  "data":
+    {"table_id":2,
+    "table_name":"#2",
+    "capacity":6,
+    "reservation_id":null,
+    "created_at":"2022-01-26T20:47:03.285Z",
+    "updated_at":"2022-01-26T20:47:03.285Z"
+     },
+    }
+```
+
 ### Possible Errors ###  
 
 |   Error code    | Description       | 
