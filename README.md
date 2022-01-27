@@ -374,8 +374,8 @@ Content-Type: application/json; charset=utf-8
 "reservation_id": null,
 "created_at": "2022-01-23T03:16:00.141Z",
 "updated_at": "2022-01-23T03:16:00.141Z"
-},
-]
+  },
+ ]
 }
 ```
 
@@ -395,7 +395,7 @@ Accept-Charset: utf-8
 "data":{
   "table_name": "#4",
 "capacity": 6
-}
+ }
 }
 ```
 
