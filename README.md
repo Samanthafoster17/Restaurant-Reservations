@@ -94,6 +94,13 @@ Accepts `GET` and `POST` requests.
 
 `GET` requests returns a list of reservations.
 
+Which also accepts the following optional query parameters:
+| Parameter      | Type   | Required | Description |
+| :------------: | :----: | :------: | :---------: | 
+| `date`         | string | no       | Returns reservations where `reservation_date` matches the date provided. |
+| `mobile_number`| string | no       | Returns reservations where `reservation_mobile_number` matches the mobile number provided, partial or full mobile number may be used to retrieve.|
+
+
 An example request looks like this:  
  `GET http://localhost:5000/reservations`
 
@@ -143,7 +150,7 @@ Content-Type: application/json; charset=utf-8
   }
  ]
 }
-```
+```  
 
 `POST` request creates a new reservation.
 
@@ -158,25 +165,25 @@ Accept: application/json
 Accept-Charset: utf-8
 
 {"data":
- {"first_name":"Samantha",
-"last_name":"Foster",
-"mobile_number":"4437269854",
-"reservation_date":"2022-01-29",
-"reservation_time":"12:30",
-"people":8
+ {"first_name":"Tiger",
+"last_name":"Lion",
+"mobile_number":"808-555-0140",
+"reservation_date":"2025-12-30",
+"reservation_time":"18:00:00",
+"people":3
  }
 }
 ```
 
 With the following fields:
-| Parameter | Type | Required |
-| :------------: | :----: | :------: |  
-| first_name | string | yes |
-| last_name | string | yes |
-| mobile_number | string | yes |
-| people |integer | yes |
-|reservation_date| date | yes |
-|reservation_time| time | yes |
+| Field          | Type  | Required  | Description |
+| :------------: | :----: | :------: | :---------: |
+| `first_name`   | string | yes      | First name of the customer   |
+| `last_name`    | string | yes      | Last name of the customer    |
+| `mobile_number`| string | yes      | Mobile number of the customer|
+| `people`       |integer | yes      | Amount of people attending   |
+|`reservation_date`| date   | yes    | Date of reservation |
+|`reservation_time`| time   | yes    | Time of reservation |
 
 An example of a `POST` response is:
 
@@ -186,16 +193,16 @@ Content-Type: application/json; charset=utf-8
 
 {
 "data":{
-"reservation_id": 21,
-"first_name": "Samantha",
-"last_name": "Foster",
-"mobile_number": "4435559854",
-"people": 8,
+reservation_id": 4,
+"first_name": "Tiger",
+"last_name": "Lion",
+"mobile_number": "808-555-0140",
+"people": 3,
 "status": "booked",
-"reservation_date": "2022-01-29T05:00:00.000Z",
-"reservation_time": "12:30:00",
-"created_at": "2022-01-26T05:58:27.516Z",
-"updated_at": "2022-01-26T05:58:27.516Z"
+"reservation_date": "2025-12-30T05:00:00.000Z",
+"reservation_time": "18:00:00",
+"created_at": "2020-12-10T08:31:32.326Z",
+"updated_at": "2020-12-10T08:31:32.326Z"
  }
 }
 ```
@@ -400,10 +407,10 @@ Accept-Charset: utf-8
 ```
 
 With the following fields:
-| Parameter | Type | Required |
-| :------------: | :----: | :------: |  
-| table_name | string | yes |
-| capacity |integer | yes |
+| Field          |   Type | Required | Description |
+| :------------: | :----: | :------: | :---------: |
+| `table_name`     | string | yes      | Name of new table. |
+| `capacity`       |integer | yes      | Maximum amount of people that may be seated at the table. |
 
 An example of a `POST` response is:
 
