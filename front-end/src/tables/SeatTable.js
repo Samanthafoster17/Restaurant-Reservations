@@ -25,7 +25,7 @@ export default function SeatTable({ tables = [], reservation_id }) {
     return () => abortController.abort();
   }
 
-  // only displaying tables that are not occupied to avoid error ///
+  // only displaying tables that are not occupied to avoid error /
   const tablesOptions = () => {
     const availableTables = tables.filter((table) => !table.reservation_id);
     return availableTables.map((table) => (
