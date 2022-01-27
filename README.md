@@ -29,7 +29,7 @@ Allows users to book, edit, search, seat, and cancel restaurant reservations as 
 
 ## Link
 
-Link to live version:
+Link to live version: https://restt-reservations.herokuapp.com/dashboard
 
 ## Technologies
 
